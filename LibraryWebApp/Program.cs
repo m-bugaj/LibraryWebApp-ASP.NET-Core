@@ -1,4 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using LibraryWebApp.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<LibraryWebAppContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LibraryWebAppContext") ?? throw new InvalidOperationException("Connection string 'LibraryWebAppContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
