@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using LibraryWebApp.Data;
+using LibraryWebApp.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<LibraryWebAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LibraryWebAppContext") ?? throw new InvalidOperationException("Connection string 'LibraryWebAppContext' not found.")));
@@ -9,6 +11,13 @@ builder.Services.AddDbContext<LibraryWebAppContext>(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
